@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+ <html> 
+    <head> 
+        <title>TEST</title> 
+        <!-- 引入 A-Frame 核心程式庫，用於建立 3D 場景 --> 
+         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script> 
+         <!-- 引入 AR.js 擴充功能（針對 A-Frame 設計的 AR 模組） --> 
+          <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script> 
+        </head>
+         <body> 
+            <!-- 2. 你的 AR 場景 --> 
+             <!-- 標記副檔名須為.mind --> 
+              <a-scene mindar-image=" imageTargetSrc: Scorpio.mind; autoStart: true; showStats: false; uiLoading: no; uiScanning: no; uiError: no; "
+               color-space="sRGB" 
+               renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" 
+               device-orientation-permission-ui="enabled: false" >
+                <!-- 設定 AR 相機位於原點，並關閉滑鼠/手勢控制（僅使用裝置鏡頭） -->
+                  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> 
+                  <!-- 定義第 0 號圖像目標，綁定 ID 供 JavaScript 監聽掃描事件使用 --> 
+                   <a-entity mindar-image-target="targetIndex: 0" id="Scorpio"></a-entity>
+                 </a-scene> <!-- 3. 用 JS 綁事件：掃到 target 時顯示 DIV，掉失時隱藏 --> 
+                 <script> 
+                 // 1. 等整個頁面（DOM、資源）載入完成後，再執行內部程式 window.addEventListener("load", () => { 
+                 // 2. 取得 AR 目標元素（<a-entity id="target">） const targetEl = document.querySelector("#target"); 
+                 // 3. 取得自訂文字容器（<div id="custom-text">） const customDiv = document.querySelector("#custom-text"); 
+                 // 4. 綁定「掃描到目標」事件 targetEl.addEventListener("targetFound", () => { 
+                 // 4.1 掃描後，將自訂文字顯示出來 customDiv.style.display = "block"; }); 
+                 // 5. 綁定「目標遺失」事件 targetEl.addEventListener("targetLost", () => { 
+                 // 5.1 目標消失後，隱藏自訂文字 customDiv.style.display = "none"; }); }); 
+                 </script> <!-- 放置一個立方體（a-box）作為顯示物件 --> <!-- position="0 0.5 0" 表示位於標記上方 0.5 單位的高度 --> <!-- rotation="0 45 0" 表示水平旋轉 45 度 --> <!-- color="red" 設定顏色為紅色 --> 
+                 <a-box position="0 0.5 0" rotation="0 45 0" color="red"></a-box>
+                  <!-- 加入環境光源（ambient light） --> <!-- 避免物件在未打光情況下顯示為黑色 --> 
+                   <a-light type="ambient" intensity="0.8"></a-light> </a-marker> 
+                   <!-- 加入相機元件，讓 AR.js 控制鏡頭追蹤 -->
+                     <a-entity camera></a-entity> </a-scene>
+                     </body> 
+                     </html>
