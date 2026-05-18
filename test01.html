@@ -1,37 +1,142 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Web AR - Hiro & Kanji Example</title>
-<!-- 引入 A-Frame 主程式 -->
-<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-<!-- 引入 AR.js for A-Frame 的擴充功能 -->
-<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <title>Simple Web AR with Hiro</title>
+
+  <!-- 引入 A-Frame 核心程式庫，用於建立 3D 場景 -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+  <!-- 引入 AR.js 擴充功能（針對 A-Frame 設計的 AR 模組） -->
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 </head>
+
 <body>
-<!-- 建立 AR 場景 -->
-<!-- arjs="sourceType: webcam;" 表示使用攝影機作為輸入來源 -->
-<!-- debugUIEnabled: true 會在左下角顯示偵測資訊，有助於偵錯與學習觀察 -->
-<a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;">
-<!-- 第一個標記：Hiro -->
-<!-- preset="hiro" 表示使用 AR.js 內建的 Hiro 標記，不需上傳 .patt 檔 -->
-<a-marker preset="hiro">
-<!-- 在 Hiro 標記上放置一個立方體（a-box） -->
-<!-- position="-0.5 0.5 0" 表示物件相對於標記的位置（左邊偏一點、高度 0.5） -->
-<!-- color="teal" 表示顏色為藍綠色 -->
-<a-box position="-0.5 0.5 0" color="teal"></a-box>
-</a-marker>
-<!-- 第二個標記：Kanji -->
-<!-- preset="kanji" 同樣為 AR.js 內建標記，可直接使用 -->
-<a-marker preset="kanji">
-<!-- 在 Kanji 標記上放置一個球體（a-sphere） -->
-<!-- position="0.5 0.5 0" 表示物件相對於標記的位置（右邊偏一點、高度 0.5） -->
-<!-- radius="0.4" 設定球體半徑 -->
-<!-- color="orange" 設定球體顏色為橘色 -->
-<a-sphere position="0.5 0.5 0" radius="0.4" color="orange"></a-sphere>
-</a-marker>
-<!-- AR.js 的攝影機元件 -->
-<!-- 這個 camera 是 AR 場景運作時必要的，會自動追蹤標記與使用者相機畫面 -->
-<a-entity camera></a-entity>
-</a-scene>
+
+  <!-- 2. 你的 AR 場景 -->
+  <!-- 標記副檔名須為 .mind -->
+  <a-scene
+    mindar-image="
+      imageTargetSrc: Scorpio.mind;
+      autoStart: true;
+      showStats: false;
+      uiLoading: no;
+      uiScanning: no;
+      uiError: no;
+    "
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+  >
+
+    <!-- 設定 AR 相機位於原點，並關閉滑鼠/手勢控制（僅使用裝置鏡頭） -->
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false">
+    </a-camera>
+
+    <!-- 定義第 0 號圖像目標 -->
+    <a-entity
+      mindar-image-target="targetIndex: 0"
+      id="Scorpio">
+    </a-entity>
+
+  </a-scene>
+
+  <!-- 3. 用 JS 綁事件：掃到 target 時顯示 DIV，掉失時隱藏 -->
+  <script>
+
+    // 1. 等整個頁面載入完成
+    window.addEventListener("load", () => {
+
+      // 2. 取得 AR 目標元素
+      const targetEl = document.querySelector("#target");
+
+      // 3. 取得自訂文字容器
+      const customDiv = document.querySelector("#custom-text");
+
+      // 4. 綁定「掃描到目標」事件
+      targetEl.addEventListener("targetFound", () => {
+
+        // 顯示文字
+        customDiv.style.display = "block";
+      });
+
+      // 5. 綁定「目標遺失」事件
+      targetEl.addEventListener("targetLost", () => {
+
+        // 隱藏文字
+        customDiv.style.display = "none";
+      });
+
+    });
+
+  </script>
+
+  <!-- 放置立方體 -->
+  <a-box
+    position="0 0.5 0"
+    rotation="0 45 0"
+    color="red">
+  </a-box>
+
+  <!-- 環境光 -->
+  <a-light
+    type="ambient"
+    intensity="0.8">
+  </a-light>
+
+  </a-marker>
+
+  <!-- 相機元件 -->
+  <a-entity camera></a-entity>
+
+  </a-scene>
+
 </body>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8" />
+
+  <title>MindAR Example</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    a-scene {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    /* 隱藏所有 MindAR 預設 UI */
+    .mindar-ui-loading,
+    .mindar-ui-error,
+    .mindar-ui-scanning {
+      display: none;
+    }
+
+  </style>
+
+</head>
+
 </html>
